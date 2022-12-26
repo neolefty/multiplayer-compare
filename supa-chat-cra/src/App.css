@@ -1,6 +1,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #000;
+    --bg-disabled: #444;
+    --fg-disabled: #bbb;
     --fg: #fff;
     --link: #e29923;
   }
@@ -9,6 +11,8 @@
 @media (prefers-color-scheme: light) {
   :root {
     --bg: #fff;
+    --bg-disabled: #ccc;
+    --fg-disabled: #555;
     --fg: #000;
     --link: #9f6403;
   }
@@ -31,4 +35,36 @@
 
 a {
   color: var(--link);
+}
+
+hr {
+  width: 75%;
+  margin: 2vh 0;
+}
+
+ul {
+  text-align: left;
+  font-size: calc(8px + 1.4vmin);
+  line-height: calc(10px + 1.8vmin);
+}
+
+input, button {
+  font-size: calc(6px + 1.75vmin);
+  margin: 0 1vmin;
+}
+
+button {
+  color: var(--bg);
+  background-color: var(--fg);
+  padding: 0.4vmin 0.6vmin;
+}
+
+button:hover {
+  color: var(--fg);
+  background-color: var(--bg);
+}
+
+button:disabled {
+  color: var(--bg-disabled);
+  background-color: var(--fg-disabled);
 }

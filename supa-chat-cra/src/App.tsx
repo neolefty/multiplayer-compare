@@ -23,6 +23,7 @@ export default function App() {
                     <a href="https://supabase.com/docs/guides/getting-started/tutorials/with-react">Supabase Auth</a>{' '}
                     from <a href="https://create-react-app.dev/">Create-React-App</a>
                 </h1>
+                <hr />
                 {session && <Account key={session.user.id} session={session} />}
                 {!session && <Auth />}
             </header>

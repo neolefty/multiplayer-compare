@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from 'react'
+import { SyntheticEvent, useState } from 'react'
 import { supabase } from './supabaseClient'
 
 export default function Auth() {
@@ -9,8 +9,6 @@ export default function Auth() {
 
     // lol
     const isValidEmail = email.indexOf('@') > 0 && email.trim().indexOf('@') < email.trim().length - 1
-
-    useEffect(() => console.log({ supabase }), [])
 
     const handleLogin = async (e: SyntheticEvent) => {
         e.preventDefault()
