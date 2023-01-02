@@ -1,8 +1,13 @@
-import { RouterProvider } from "@tanstack/react-router"
 import React from "react"
 import "./App.css"
+import { RouterProvider } from "react-router-dom"
 import router from "./router"
+import SupabaseProvider from "./SupabaseProvider"
 
 export default function App() {
-    return <RouterProvider router={router} />
+    return (
+        <SupabaseProvider>
+            <RouterProvider router={router} />
+        </SupabaseProvider>
+    )
 }
