@@ -5,9 +5,22 @@
     grid-gap: 1vw;
     border-bottom: 1px solid var(--fg);
     justify-content: center;
-    padding: 0.5vmin;
 }
 
-.container > .active {
-    font-weight: bold;
+.navLink {
+    padding: 1vmin;
+}
+
+.navLink:hover {
+    color: var(--fg);
+}
+
+.active {
+    color: var(--bg);
+    background-color: var(--link);
+}
+
+.active:hover {
+    color: var(--bg);
+    cursor: default;
 }

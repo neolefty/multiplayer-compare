@@ -6,7 +6,7 @@ import ProfilePage from "./pages/ProfilePage"
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <PageFrame>Index</PageFrame>,
+        element: <PageFrame>Welcome</PageFrame>,
     },
     {
         path: "profile",
