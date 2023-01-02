@@ -2,6 +2,7 @@
   "name": "supa-chat-cra",
   "version": "0.1.0",
   "private": true,
+  "license": "0BSD",
   "dependencies": {
     "@supabase/supabase-js": "^2.2.2",
     "@testing-library/jest-dom": "^5.16.5",
@@ -38,7 +39,7 @@
       "prettier/prettier": ["warn"],
       "indent": ["warn", 4],
       "semi": ["warn","never"],
-      "quotes": ["warn", "single"]
+      "quotes": ["warn", "double"]
     }
   },
   "browserslist": {
