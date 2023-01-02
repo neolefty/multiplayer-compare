@@ -14,6 +14,7 @@ export default function Nav() {
         <div className={styles.container}>
             <StyledLink to="/">Home</StyledLink>
             <StyledLink to="/profile">Profile</StyledLink>
+            <StyledLink to="/chat">Chat</StyledLink>
         </div>
     )
 }

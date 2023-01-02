@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react"
-import { useSupabase } from "./SupabaseProvider"
+import { useSupabase } from "../SupabaseProvider"
 
 export default function Avatar({
     url,
@@ -13,7 +13,7 @@ export default function Avatar({
     const { supabase } = useSupabase()
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
     const [error, setError] = useState<string>()
-    const [uploading, setUploading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const isStoredImage = url && url.indexOf("/") >= 0
 
@@ -39,16 +39,21 @@ export default function Avatar({
                 handleError("loading image", error)
             }
         },
-        [handleError]
+        [handleError, supabase]
     )
 
     useEffect(() => {
-        if (url) downloadImage(url)
+        if (url) {
+            setLoading(true)
+            downloadImage(url)
+                .catch((reason) => setError(`${reason}`))
+                .finally(() => setLoading(false))
+        }
     }, [downloadImage, url])
 
     const handleUpload = useCallback(
         async (event: ChangeEvent<HTMLInputElement>) => {
-            setUploading(true)
+            setLoading(true)
             try {
                 const files = event.target.files
                 if (!files?.length) setError("Please select an image to upload.")
@@ -64,10 +69,10 @@ export default function Avatar({
             } catch (error) {
                 handleError("uploading image", error)
             } finally {
-                setUploading(false)
+                setLoading(false)
             }
         },
-        [handleError, onUpload]
+        [handleError, onUpload, supabase]
     )
 
     return (
@@ -83,9 +88,9 @@ export default function Avatar({
                     />
                 )}
                 <label htmlFor="single">Upload your own image</label>
-                <input type="file" id="single" accept="image/*" onChange={handleUpload} disabled={uploading} />
+                <input type="file" id="single" accept="image/*" onChange={handleUpload} disabled={loading} />
             </div>
-            {uploading && <p>Uploading ...</p>}
+            {loading && <p>Uploading ...</p>}
             {error && <p>{error}</p>}
         </>
     )

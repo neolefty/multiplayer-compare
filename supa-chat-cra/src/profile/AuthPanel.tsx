@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from "react"
-import { useSupabase } from "./SupabaseProvider"
+import { useSupabase } from "../SupabaseProvider"
 
-export default function Auth() {
+export default function AuthPanel() {
     const { supabase } = useSupabase()
     const [loading, setLoading] = useState(false)
     const [email, setEmail] = useState("")

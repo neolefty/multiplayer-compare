@@ -2,8 +2,8 @@ import { Session } from "@supabase/supabase-js"
 import { SyntheticEvent, useCallback, useEffect, useReducer } from "react"
 import { JsonValue } from "type-fest"
 import Avatar from "./Avatar"
-import { useSupabase } from "./SupabaseProvider"
-import Tree from "./Tree"
+import { useSupabase } from "../SupabaseProvider"
+import Tree from "../util/Tree"
 
 interface AccountState {
     loading: boolean
@@ -124,7 +124,7 @@ export default function Account({ session }: { session: Session }) {
                 dispatch({ loading: false })
             }
         },
-        [session]
+        [session, supabase]
     )
 
     return (

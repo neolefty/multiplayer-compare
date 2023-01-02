@@ -1,7 +1,7 @@
 import React from "react"
-import Account from "../Account"
-import Auth from "../Auth"
-import { PageFrame } from "../PageFrame"
+import Account from "../profile/Account"
+import AuthPanel from "../profile/AuthPanel"
+import { PageFrame } from "../util/PageFrame"
 import { useSupabase } from "../SupabaseProvider"
 
 export default function ProfilePage() {
@@ -9,7 +9,7 @@ export default function ProfilePage() {
     return (
         <PageFrame>
             {session && <Account key={session.user.id} session={session} />}
-            {!session && <Auth />}
+            {!session && <AuthPanel />}
         </PageFrame>
     )
 }
