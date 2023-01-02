@@ -18,11 +18,8 @@
   }
 }
 
-.App {
+#root {
   text-align: center;
-}
-
-.App-header {
   background-color: var(--bg);
   min-height: 100vh;
   display: flex;
@@ -31,6 +28,15 @@
   justify-content: flex-start;
   font-size: calc(10px + 2vmin);
   color: var(--fg);
+}
+
+h1 {
+  font-size: 120%;
+  margin: 0;
+  width: 100%;
+  padding: 0.5vh;
+  border-bottom: 1px solid var(--fg);
+  background-color: var(--bg-disabled);
 }
 
 a {

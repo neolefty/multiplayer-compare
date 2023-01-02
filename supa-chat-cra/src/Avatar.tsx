@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react"
-import { supabase } from "./supabaseClient"
+import { useSupabase } from "./SupabaseProvider"
 
 export default function Avatar({
     url,
@@ -10,6 +10,7 @@ export default function Avatar({
     size: number
     onUpload: (filePath: string) => void
 }) {
+    const { supabase } = useSupabase()
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
     const [error, setError] = useState<string>()
     const [uploading, setUploading] = useState(false)

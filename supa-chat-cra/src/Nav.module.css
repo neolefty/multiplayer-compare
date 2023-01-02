@@ -1,0 +1,8 @@
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.container > .active {
+    font-weight: bold;
+}

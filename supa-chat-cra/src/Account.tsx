@@ -2,7 +2,7 @@ import { Session } from "@supabase/supabase-js"
 import { SyntheticEvent, useCallback, useEffect, useReducer } from "react"
 import { JsonValue } from "type-fest"
 import Avatar from "./Avatar"
-import { supabase } from "./supabaseClient"
+import { useSupabase } from "./SupabaseProvider"
 import Tree from "./Tree"
 
 interface AccountState {
@@ -26,6 +26,7 @@ const reducer = (state: AccountState, action: "clear" | Partial<AccountState>) =
 
 export default function Account({ session }: { session: Session }) {
     const [state, dispatch] = useReducer(reducer, DEFAULT_ACCOUNT_STATE)
+    const { supabase } = useSupabase()
 
     const dirty =
         state.editAvatarUrl !== state.avatarUrl ||
@@ -65,7 +66,7 @@ export default function Account({ session }: { session: Session }) {
             if (!cancel) dispatch({ loading: false })
         }
         return () => (cancel = true)
-    }, [session])
+    }, [session, supabase])
 
     useEffect(() => {
         getProfile()
@@ -100,7 +101,7 @@ export default function Account({ session }: { session: Session }) {
                 dispatch({ loading: false })
             }
         },
-        [session, state]
+        [session, state, supabase]
     )
 
     const handleUpload = useCallback(
