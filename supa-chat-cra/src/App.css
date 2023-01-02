@@ -28,7 +28,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: calc(10px + 2vmin);
   color: var(--fg);
 }
@@ -46,6 +46,10 @@ ul {
   text-align: left;
   font-size: calc(8px + 1.4vmin);
   line-height: calc(10px + 1.8vmin);
+}
+
+label {
+  justify-self: end;
 }
 
 input, button {
@@ -67,4 +71,25 @@ button:hover {
 button:disabled {
   color: var(--bg-disabled);
   background-color: var(--fg-disabled);
+}
+
+form.profile {
+  display: grid;
+  grid-gap: 0.8vmin;
+  grid-template-columns: 1fr 2fr;
+  justify-items: center;
+}
+
+form.profile > button {
+  grid-column: 1 / 3;
+  align-self: center;
+}
+
+form.profile > button {
+  width: min-content;
+  margin: 1vmin;
+}
+
+form.profile > input {
+  width: 100%;
 }

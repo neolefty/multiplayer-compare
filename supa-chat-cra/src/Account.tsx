@@ -105,12 +105,11 @@ export default function Account({ session }: { session: Session }) {
 
     return (
         <>
-            <p>
-                Logged in as {session.user.email} for {session.expires_in} seconds.
-                <button onClick={supabase.auth.signOut}>Log out</button>
-            </p>
-            <h2>Profile:</h2>
             <ul>
+                <li>
+                    email: {session.user.email} — for {session.expires_in} seconds.
+                    <button onClick={() => supabase.auth.signOut()}>Log out</button>
+                </li>
                 {state.loading && (
                     <li>
                         <em>Loading ...</em>
@@ -124,7 +123,7 @@ export default function Account({ session }: { session: Session }) {
                 )}
                 {state.avatarUrl && (
                     <li>
-                        <img src={state.avatarUrl} alt="avatar" />
+                        <img src={state.avatarUrl} alt="avatar" title={`${state.username}'s Avatar`} />
                     </li>
                 )}
                 {state.error && (
@@ -138,29 +137,26 @@ export default function Account({ session }: { session: Session }) {
                     </li>
                 )}
             </ul>
-            <form onSubmit={updateProfile}>
-                <h2>Update</h2>
-                <p>
-                    Username:{' '}
-                    <input
-                        value={state.editUsername || ''}
-                        onChange={(e) => dispatch({ editUsername: e.target.value })}
-                    />
-                </p>
-                <p>
-                    Website:{' '}
-                    <input
-                        value={state.editWebsite || ''}
-                        onChange={(e) => dispatch({ editWebsite: e.target.value })}
-                    />
-                </p>
-                <p>
-                    Avatar URL:{' '}
-                    <input
-                        value={state.editAvatarUrl || ''}
-                        onChange={(e) => dispatch({ editAvatarUrl: e.target.value })}
-                    />
-                </p>
+            <hr />
+            <form className="profile" onSubmit={updateProfile}>
+                <label htmlFor="username">Username:</label>
+                <input
+                    id="username"
+                    value={state.editUsername || ''}
+                    onChange={(e) => dispatch({ editUsername: e.target.value })}
+                />
+                <label htmlFor="website">Website:</label>
+                <input
+                    id="website"
+                    value={state.editWebsite || ''}
+                    onChange={(e) => dispatch({ editWebsite: e.target.value })}
+                />
+                <label htmlFor="avatarUrl">Avatar URL:</label>
+                <input
+                    id="avatarUrl"
+                    value={state.editAvatarUrl || ''}
+                    onChange={(e) => dispatch({ editAvatarUrl: e.target.value })}
+                />
                 <button disabled={!dirty}>Update</button>
             </form>
             <hr />
