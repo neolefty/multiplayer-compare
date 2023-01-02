@@ -1,9 +1,9 @@
-import { Session } from '@supabase/gotrue-js/src/lib/types'
-import React, { useEffect, useState } from 'react'
-import './App.css'
-import Account from './Account'
-import Auth from './Auth'
-import { supabase } from './supabaseClient'
+import { Session } from "@supabase/gotrue-js/src/lib/types"
+import React, { useEffect, useState } from "react"
+import "./App.css"
+import Account from "./Account"
+import Auth from "./Auth"
+import { supabase } from "./supabaseClient"
 
 export default function App() {
     const [session, setSession] = useState<Session | null>(null)
@@ -20,7 +20,7 @@ export default function App() {
         <div className="App">
             <header className="App-header">
                 <h1>
-                    <a href="https://supabase.com/docs/guides/getting-started/tutorials/with-react">Supabase Auth</a>{' '}
+                    <a href="https://supabase.com/docs/guides/getting-started/tutorials/with-react">Supabase Auth</a>{" "}
                     from <a href="https://create-react-app.dev/">Create-React-App</a>
                 </h1>
                 <hr />

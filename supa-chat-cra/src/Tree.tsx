@@ -1,4 +1,4 @@
-import { JsonValue } from 'type-fest'
+import { JsonValue } from "type-fest"
 
 export default function Tree({ json }: { json: JsonValue | undefined }) {
     if (Array.isArray(json))
@@ -11,7 +11,7 @@ export default function Tree({ json }: { json: JsonValue | undefined }) {
                 ))}
             </ul>
         )
-    else if (json !== null && typeof json === 'object')
+    else if (json !== null && typeof json === "object")
         return (
             <ul>
                 {Object.entries(json).map(([key, value]) => (

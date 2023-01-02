@@ -1,8 +1,9 @@
-import { Session } from '@supabase/supabase-js'
-import { SyntheticEvent, useCallback, useEffect, useReducer } from 'react'
-import { JsonValue } from 'type-fest'
-import { supabase } from './supabaseClient'
-import Tree from './Tree'
+import { Session } from "@supabase/supabase-js"
+import { SyntheticEvent, useCallback, useEffect, useReducer } from "react"
+import { JsonValue } from "type-fest"
+import Avatar from "./Avatar"
+import { supabase } from "./supabaseClient"
+import Tree from "./Tree"
 
 interface AccountState {
     loading: boolean
@@ -20,8 +21,8 @@ const DEFAULT_ACCOUNT_STATE: AccountState = {
     loading: false,
 }
 
-const reducer = (state: AccountState, action: 'clear' | Partial<AccountState>) =>
-    action === 'clear' ? DEFAULT_ACCOUNT_STATE : { ...state, ...action }
+const reducer = (state: AccountState, action: "clear" | Partial<AccountState>) =>
+    action === "clear" ? DEFAULT_ACCOUNT_STATE : { ...state, ...action }
 
 export default function Account({ session }: { session: Session }) {
     const [state, dispatch] = useReducer(reducer, DEFAULT_ACCOUNT_STATE)
@@ -34,14 +35,14 @@ export default function Account({ session }: { session: Session }) {
     const getProfile = useCallback(async () => {
         let cancel = false
         try {
-            dispatch('clear')
+            dispatch("clear")
             dispatch({ loading: true })
             const { user } = session
 
             let { data, error, status } = await supabase
-                .from('profiles')
-                .select('username, website, avatar_url')
-                .eq('id', user.id)
+                .from("profiles")
+                .select("username, website, avatar_url")
+                .eq("id", user.id)
                 .single()
 
             if (error && status !== 406) dispatch({ error: `${error}` })
@@ -74,19 +75,18 @@ export default function Account({ session }: { session: Session }) {
     const isEmpty = !state.error && !state.loading && !state.avatarUrl && !state.username && !state.website
 
     const updateProfile = useCallback(
-        async (e: SyntheticEvent) => {
-            e.preventDefault()
+        async (e?: SyntheticEvent) => {
+            e?.preventDefault()
             dispatch({ loading: true, error: undefined })
             try {
-                const { user } = session
                 const updates = {
-                    id: user.id,
+                    id: session.user.id,
                     username: state.editUsername,
                     website: state.editWebsite,
                     avatar_url: state.editAvatarUrl,
                     updated_at: new Date(),
                 }
-                let { error } = await supabase.from('profiles').upsert(updates)
+                let { error } = await supabase.from("profiles").upsert(updates)
                 if (error) dispatch({ error: `${error}` })
                 else
                     dispatch({
@@ -101,6 +101,29 @@ export default function Account({ session }: { session: Session }) {
             }
         },
         [session, state]
+    )
+
+    const handleUpload = useCallback(
+        async (url: string) => {
+            dispatch({
+                avatarUrl: url,
+                editAvatarUrl: url,
+                loading: true,
+            })
+            try {
+                let { error } = await supabase.from("profiles").upsert({
+                    id: session.user.id,
+                    avatar_url: url,
+                    updated_at: new Date(),
+                })
+                if (error) dispatch({ error: `${error}` })
+            } catch (error) {
+                dispatch({ error: `${error}` })
+            } finally {
+                dispatch({ loading: false })
+            }
+        },
+        [session]
     )
 
     return (
@@ -123,7 +146,7 @@ export default function Account({ session }: { session: Session }) {
                 )}
                 {state.avatarUrl && (
                     <li>
-                        <img src={state.avatarUrl} alt="avatar" title={`${state.username}'s Avatar`} />
+                        <Avatar url={state.avatarUrl} size={200} onUpload={handleUpload} />
                     </li>
                 )}
                 {state.error && (
@@ -139,22 +162,22 @@ export default function Account({ session }: { session: Session }) {
             </ul>
             <hr />
             <form className="profile" onSubmit={updateProfile}>
-                <label htmlFor="username">Username:</label>
+                <label htmlFor="username">Username</label>
                 <input
                     id="username"
-                    value={state.editUsername || ''}
+                    value={state.editUsername || ""}
                     onChange={(e) => dispatch({ editUsername: e.target.value })}
                 />
-                <label htmlFor="website">Website:</label>
+                <label htmlFor="website">Website</label>
                 <input
                     id="website"
-                    value={state.editWebsite || ''}
+                    value={state.editWebsite || ""}
                     onChange={(e) => dispatch({ editWebsite: e.target.value })}
                 />
-                <label htmlFor="avatarUrl">Avatar URL:</label>
+                <label htmlFor="avatarUrl">Avatar URL</label>
                 <input
                     id="avatarUrl"
-                    value={state.editAvatarUrl || ''}
+                    value={state.editAvatarUrl || ""}
                     onChange={(e) => dispatch({ editAvatarUrl: e.target.value })}
                 />
                 <button disabled={!dirty}>Update</button>

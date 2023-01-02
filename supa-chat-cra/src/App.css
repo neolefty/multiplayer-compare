@@ -44,8 +44,8 @@ hr {
 
 ul {
   text-align: left;
-  font-size: calc(8px + 1.4vmin);
-  line-height: calc(10px + 1.8vmin);
+  /*font-size: calc(8px + 1.4vmin);*/
+  /*line-height: calc(10px + 1.8vmin);*/
 }
 
 label {
@@ -75,7 +75,7 @@ button:disabled {
 
 form.profile {
   display: grid;
-  grid-gap: 0.8vmin;
+  grid-gap: 1vmin;
   grid-template-columns: 1fr 2fr;
   justify-items: center;
 }
@@ -91,5 +91,5 @@ form.profile > button {
 }
 
 form.profile > input {
-  width: 100%;
+  width: calc(35vw + 50px);
 }
