@@ -54,7 +54,7 @@ export default function Avatar({
                 else {
                     const file = files[0]
                     const fileExt = file.name.split(".").pop()
-                    const fileName = `${Math.random()}.${fileExt}`
+                    const fileName = `${Math.random()}.${fileExt}`.substring(2)
                     const filePath = `${fileName}`
                     const { error } = await supabase.storage.from("avatars").upload(filePath, file)
                     handleError("uploading image", error)
@@ -78,7 +78,7 @@ export default function Avatar({
                         src={avatarUrl ? avatarUrl : `https://place-hold.it/${size}x${size}`}
                         alt={avatarUrl ? "Avatar" : "No Image"}
                         title={avatarUrl ? "Avatar" : "No Image"}
-                        style={{ height: size, width: size }}
+                        style={{ height: size }}
                     />
                 )}
                 <label htmlFor="single">Upload your own image</label>
