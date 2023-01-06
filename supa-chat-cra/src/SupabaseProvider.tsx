@@ -76,6 +76,9 @@ export default function SupabaseProvider({ children }: PropsWithChildren) {
                 chatLogDispatch(payload.payload)
             })
             channelRef.current = channel
+            // Cleanup is being triggered by second render of React Dev Mode, when subscription
+            // hasn't finished initializing, and then re-subscription is not succeeding.
+            // Maybe wait until subscription is active — that is, (status: "SUBSCRIBED") is received.
             // return () => {
             //     if (channelRef.current === channel) channelRef.current = undefined
             //     channel.unsubscribe().then((value) => console.log("Unsubscribed", { value }))

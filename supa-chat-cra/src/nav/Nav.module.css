@@ -7,11 +7,11 @@
     justify-content: center;
 }
 
-.navLink {
+.navItem {
     padding: 1vmin;
 }
 
-.navLink:hover {
+.navItem:hover {
     color: var(--fg);
 }
 

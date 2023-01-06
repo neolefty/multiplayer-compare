@@ -6,8 +6,8 @@ import { PageFrame } from "../util/PageFrame"
 export default function ChatPage() {
     return (
         <PageFrame>
-            <ChatLog />
             <ChatSend />
+            <ChatLog />
         </PageFrame>
     )
 }
