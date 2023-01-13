@@ -17,8 +17,8 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 const chatChannel = supabase.channel("chat")
 
 // For more options & details, see https://supabase.com/docs/guides/realtime/quickstart
-chatChannel.subscribe((status) => {
-    console.log({ status })
+chatChannel.subscribe((status, err) => {
+    console.log({ status, err })
 })
 
 interface SupabaseState {
@@ -71,6 +71,7 @@ export default function SupabaseProvider({ children }: PropsWithChildren) {
     // TODO make this only happen once — maybe a global?
     useEffect(() => {
         if (!channelRef.current) {
+            // noinspection UnnecessaryLocalVariableJS
             const channel = chatChannel.on("broadcast", { event: CHAT_EVENT }, (payload) => {
                 console.log("incoming", { payload })
                 chatLogDispatch(payload.payload)

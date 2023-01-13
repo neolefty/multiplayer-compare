@@ -6,7 +6,7 @@ export default function useDeepState<S>(initialState: S): [s: S, setter: (s: S) 
     const setDeepState = useCallback((newState: S) => {
         const newJson = JSON.stringify(newState)
         if (newJson !== jsonRef.current) {
-            console.log({ newJson, oldJson: jsonRef.current })
+            // console.log({ newJson, oldJson: jsonRef.current })
             jsonRef.current = newJson
             setState(newState)
             return true

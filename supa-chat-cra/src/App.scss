@@ -67,16 +67,14 @@ button {
   color: var(--bg);
   background-color: var(--fg);
   padding: 0.4vmin 0.6vmin;
-}
-
-button:hover {
-  color: var(--fg);
-  background-color: var(--bg);
-}
-
-button:disabled {
-  color: var(--bg-disabled);
-  background-color: var(--fg-disabled);
+  &:hover {
+    color: var(--fg);
+    background-color: var(--bg);
+  }
+  &:disabled {
+    color: var(--bg-disabled);
+    background-color: var(--fg-disabled);
+  }
 }
 
 form.profile {
@@ -84,18 +82,13 @@ form.profile {
   grid-gap: 1vmin;
   grid-template-columns: 1fr 2fr;
   justify-items: center;
-}
-
-form.profile > button {
-  grid-column: 1 / 3;
-  align-self: center;
-}
-
-form.profile > button {
-  width: min-content;
-  margin: 1vmin;
-}
-
-form.profile > input {
-  width: calc(35vw + 50px);
+  & > button {
+    grid-column: 1 / 3;
+    align-self: center;
+    width: min-content;
+    margin: 1vmin;
+  }
+  & > input {
+    width: calc(35vw + 50px);
+  }
 }

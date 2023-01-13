@@ -9,18 +9,17 @@
 
 .navItem {
     padding: 1vmin;
-}
-
-.navItem:hover {
-    color: var(--fg);
+    &:hover {
+         color: var(--fg);
+     }
 }
 
 .active {
     color: var(--bg);
     background-color: var(--link);
-}
-
-.active:hover {
-    color: var(--bg);
-    cursor: default;
+    // override .navItem:hover to deactivate it, since clicking an active nav item has no effect
+    &:hover {
+        color: var(--bg);
+        cursor: default;
+    }
 }

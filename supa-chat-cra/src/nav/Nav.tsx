@@ -2,7 +2,7 @@ import clsx from "clsx"
 import { PropsWithChildren } from "react"
 import { NavLink } from "react-router-dom"
 import { useSupabase } from "../SupabaseProvider"
-import styles from "./Nav.module.css"
+import styles from "./Nav.module.scss"
 
 const StyledLink = ({ children, to }: PropsWithChildren<{ to: string }>) => (
     <NavLink to={to} className={({ isActive, isPending }) => clsx(styles.navItem, isActive && styles.active)}>
