@@ -17,11 +17,16 @@ const INITIAL_STATE: ChatState = {
 
 const ChatContext = createContext(INITIAL_STATE)
 
+// function ChatReducer(state: ChatState, action: Partial<ChatState>): ChatState {
+//     return Object.freeze({ ...state, ...action })
+// }
 function MergeReducer<S extends {}>(state: S, action: Partial<S>): S {
     return Object.freeze({ ...state, ...action })
 }
 
 export const ChatProvider = ({ channelName, children }: PropsWithChildren<{ channelName: string }>) => {
+    // This would eliminate the false error in WebStorm on the next line, "Expression expected."
+    // const [state, dispatch] = useReducer(ChatReducer, INITIAL_STATE)
     const [state, dispatch] = useReducer(MergeReducer<ChatState>, INITIAL_STATE)
     // Should we also wait for useSupabase.session? May need Auth.
     const { supabase } = useSupabase()
@@ -37,12 +42,9 @@ export const ChatProvider = ({ channelName, children }: PropsWithChildren<{ chan
                 channel: undefined,
             })
             // equivalent of newManager.addListener(dispatch), but that would be hard to read!
-            newManager.addListener(({ err, status, channel }) => {
-                dispatch({
-                    err,
-                    status,
-                    channel,
-                })
+            newManager.addListener((update) => {
+                console.log(update)
+                dispatch(update)
             })
         }
     }, [channelName, state.manager, supabase])

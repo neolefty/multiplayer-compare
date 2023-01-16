@@ -1,4 +1,4 @@
-import { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js"
+import { REALTIME_SUBSCRIBE_STATES, RealtimeChannel, SupabaseClient } from "@supabase/supabase-js"
 
 type RealtimeChannelListener = (event: { channel?: RealtimeChannel; status?: string; err?: string }) => void
 
@@ -42,8 +42,7 @@ export default class ChatChannelManager {
                     if (err) console.error(err)
                     this.subscriptionError = err && `${err}`
                     this.subscriptionStatus = status
-                    console.log({ newChannel, status, err })
-                    this.realtimeChannel = newChannel
+                    if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) this.realtimeChannel = newChannel
                     resolve({ err: this.err, status })
                     this.sendToListeners()
                 }, timeout)
@@ -60,11 +59,11 @@ export default class ChatChannelManager {
 
     async unsubscribe(timeout?: number): Promise<{ err?: string }> {
         if (this.channel) {
+            const oldChannel = this.realtimeChannel
+            this.realtimeChannel = undefined
+            this.subscriptionStatus = undefined
+            this.subscriptionError = undefined
             try {
-                const oldChannel = this.realtimeChannel
-                this.realtimeChannel = undefined
-                this.subscriptionStatus = undefined
-                this.subscriptionError = undefined
                 await oldChannel?.unsubscribe(timeout)
             } catch (err) {
                 console.error(err)
