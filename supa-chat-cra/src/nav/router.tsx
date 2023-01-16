@@ -1,8 +1,8 @@
 import React from "react"
 import { createBrowserRouter } from "react-router-dom"
-import ChatPage from "./ChatPage"
-import { PageFrame } from "../util/PageFrame"
-import ProfilePage from "./ProfilePage"
+import ChatPage from "../chat/ChatPage"
+import { PageFrame } from "./PageFrame"
+import ProfilePage from "../profile/ProfilePage"
 
 const router = createBrowserRouter([
     {

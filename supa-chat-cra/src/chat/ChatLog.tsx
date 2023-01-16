@@ -1,4 +1,4 @@
-import { useChatLog } from "../SupabaseProvider"
+import { useChatLog } from "./ChatLogProvider"
 
 export const CHAT_EVENT = "chat"
 

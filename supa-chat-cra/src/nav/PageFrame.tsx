@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react"
-import Nav from "../nav/Nav"
+import Nav from "./Nav"
 import styles from "./PageFrame.module.scss"
 
 export const PageFrame = ({ children }: PropsWithChildren) => (

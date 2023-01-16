@@ -1,9 +1,8 @@
 import { SyntheticEvent, useCallback, useRef, useState } from "react"
-import { useSupabase } from "../SupabaseProvider"
 import { CHAT_EVENT } from "./ChatLog"
+import { RealtimeChannel } from "@supabase/supabase-js"
 
-export default function ChatSend() {
-    const { chat } = useSupabase()
+export default function ChatSend({ chat }: { chat: RealtimeChannel }) {
     const [sending, setSending] = useState(false)
     const [text, setText] = useState("")
     const inputRef = useRef<HTMLInputElement>(null)

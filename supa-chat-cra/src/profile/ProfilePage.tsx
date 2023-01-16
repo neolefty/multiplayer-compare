@@ -1,7 +1,7 @@
 import React from "react"
-import Account from "../profile/Account"
-import AuthPanel from "../profile/AuthPanel"
-import { PageFrame } from "../util/PageFrame"
+import Account from "./Account"
+import AuthPanel from "./AuthPanel"
+import { PageFrame } from "../nav/PageFrame"
 import { useSupabase } from "../SupabaseProvider"
 
 export default function ProfilePage() {

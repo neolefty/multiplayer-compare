@@ -19,8 +19,8 @@ export default function AuthPanel() {
             console.log({ data })
             if (error) throw error
             setSent(true)
-        } catch (error: any) {
-            alert(error.error_description || error.message)
+        } catch (err: any) {
+            alert(err.error_description || err.message)
         } finally {
             setLoading(false)
         }

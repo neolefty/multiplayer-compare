@@ -57,10 +57,10 @@ export default function Account({ session }: { session: Session }) {
                     avatarUrl: data.avatar_url,
                     editAvatarUrl: data.avatar_url,
                 })
-        } catch (error) {
+        } catch (err) {
             if (!cancel) {
-                console.error(error)
-                dispatch({ error: `${error}` })
+                console.error(err)
+                dispatch({ error: `${err}` })
             }
         } finally {
             if (!cancel) dispatch({ loading: false })
@@ -95,8 +95,9 @@ export default function Account({ session }: { session: Session }) {
                         website: state.editWebsite,
                         avatarUrl: state.editAvatarUrl,
                     })
-            } catch (error) {
-                dispatch({ error: `${error}` })
+            } catch (err) {
+                console.error(err)
+                dispatch({ error: `${err}` })
             } finally {
                 dispatch({ loading: false })
             }
@@ -118,8 +119,9 @@ export default function Account({ session }: { session: Session }) {
                     updated_at: new Date(),
                 })
                 if (error) dispatch({ error: `${error}` })
-            } catch (error) {
-                dispatch({ error: `${error}` })
+            } catch (err) {
+                console.error(err)
+                dispatch({ error: `${err}` })
             } finally {
                 dispatch({ loading: false })
             }

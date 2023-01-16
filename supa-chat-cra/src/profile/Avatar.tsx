@@ -35,8 +35,8 @@ export default function Avatar({
                     const url = URL.createObjectURL(data)
                     setAvatarUrl(url)
                 }
-            } catch (error) {
-                handleError("loading image", error)
+            } catch (err) {
+                handleError("loading image", err)
             }
         },
         [handleError, supabase]
@@ -46,7 +46,10 @@ export default function Avatar({
         if (url) {
             setLoading(true)
             downloadImage(url)
-                .catch((reason) => setError(`${reason}`))
+                .catch((err) => {
+                    console.error(err)
+                    setError(`${err}`)
+                })
                 .finally(() => setLoading(false))
         }
     }, [downloadImage, url])
@@ -66,8 +69,8 @@ export default function Avatar({
                     handleError("uploading image", error)
                     if (!error) onUpload(filePath)
                 }
-            } catch (error) {
-                handleError("uploading image", error)
+            } catch (err) {
+                handleError("uploading image", err)
             } finally {
                 setLoading(false)
             }

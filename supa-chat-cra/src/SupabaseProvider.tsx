@@ -1,8 +1,8 @@
 import { Session } from "@supabase/gotrue-js/src/lib/types"
-import { createClient, RealtimeChannel, SupabaseClient } from "@supabase/supabase-js"
-import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useReducer, useRef } from "react"
-import { CHAT_EVENT } from "./chat/ChatLog"
+import { createClient, SupabaseClient } from "@supabase/supabase-js"
+import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo } from "react"
 import useDeepState from "./useDeepState"
+import ChatChannelManager from "./chat/ChatChannelManager"
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || "missing from config"
 const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || "missing from config"
@@ -14,44 +14,20 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     },
 })
 
-const chatChannel = supabase.channel("chat")
-
-// For more options & details, see https://supabase.com/docs/guides/realtime/quickstart
-chatChannel.subscribe((status, err) => {
-    console.log({ status, err })
-})
-
 interface SupabaseState {
     supabase: SupabaseClient
     session?: Session
-    chat: RealtimeChannel
 }
 
-const INITIAL_STATE: SupabaseState = Object.freeze({
-    supabase: supabase,
-    chat: chatChannel,
+export const INITIAL_SUPABASE_STATE: SupabaseState = Object.freeze({
+    supabase,
+    chat: new ChatChannelManager(supabase, "chat"),
 })
 
-const SupabaseContext = createContext<SupabaseState>(INITIAL_STATE)
-
-interface ChatLogState {
-    chatLog: ReadonlyArray<string>
-}
-
-const INITIAL_CHAT_LOG = Object.freeze({ chatLog: [] })
-
-const ChatLogContext = createContext<ChatLogState>(INITIAL_CHAT_LOG)
-
-const ChatLogReducer = (state: ChatLogState, action: string): ChatLogState =>
-    Object.freeze({
-        chatLog: [...state.chatLog, action],
-    })
+const SupabaseContext = createContext<SupabaseState>(INITIAL_SUPABASE_STATE)
 
 export default function SupabaseProvider({ children }: PropsWithChildren) {
     const [session, setSession] = useDeepState<Session | null>(null)
-    const [chatLog, chatLogDispatch] = useReducer(ChatLogReducer, INITIAL_CHAT_LOG)
-
-    const channelRef = useRef<RealtimeChannel>()
 
     // subscribe to auth
     useEffect(() => {
@@ -67,41 +43,15 @@ export default function SupabaseProvider({ children }: PropsWithChildren) {
         return subscription.unsubscribe
     }, [setSession])
 
-    // subscribe to chat
-    // TODO make this only happen once — maybe a global?
-    useEffect(() => {
-        if (!channelRef.current) {
-            // noinspection UnnecessaryLocalVariableJS
-            const channel = chatChannel.on("broadcast", { event: CHAT_EVENT }, (payload) => {
-                console.log("incoming", { payload })
-                chatLogDispatch(payload.payload)
-            })
-            channelRef.current = channel
-            // Cleanup is being triggered by second render of React Dev Mode, when subscription
-            // hasn't finished initializing, and then re-subscription is not succeeding.
-            // Maybe wait until subscription is active — that is, (status: "SUBSCRIBED") is received.
-            // return () => {
-            //     if (channelRef.current === channel) channelRef.current = undefined
-            //     channel.unsubscribe().then((value) => console.log("Unsubscribed", { value }))
-            // }
-        }
-    }, [session])
-
     const supabaseState: SupabaseState = useMemo(
         () =>
             Object.freeze({
+                ...INITIAL_SUPABASE_STATE,
                 session: session || undefined,
-                supabase: supabase,
-                chat: chatChannel,
             }),
         [session]
     )
-    return (
-        <SupabaseContext.Provider value={supabaseState}>
-            <ChatLogContext.Provider value={chatLog}>{children}</ChatLogContext.Provider>
-        </SupabaseContext.Provider>
-    )
+    return <SupabaseContext.Provider value={supabaseState}>{children}</SupabaseContext.Provider>
 }
 
 export const useSupabase = () => useContext(SupabaseContext)
-export const useChatLog = () => useContext(ChatLogContext)
