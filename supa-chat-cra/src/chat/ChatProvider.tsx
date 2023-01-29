@@ -1,12 +1,10 @@
 import SupabaseChatManager from "./ChatChannelManager"
 import { INITIAL_SUPABASE_STATE, useSupabase } from "../SupabaseProvider"
 import { createContext, PropsWithChildren, useContext, useEffect, useReducer } from "react"
-import { RealtimeChannel } from "@supabase/supabase-js"
 
 interface ChatState {
     manager: SupabaseChatManager
     status: string
-    channel?: RealtimeChannel
     err?: string
 }
 
@@ -33,13 +31,12 @@ export const ChatProvider = ({ channelName, children }: PropsWithChildren<{ chan
 
     useEffect(() => {
         if (state.manager.channelName !== channelName) {
-            if (state.manager.channel) state.manager.unsubscribe()
+            if (!state.manager.isClosed) state.manager.unsubscribe()
             const newManager = new SupabaseChatManager(supabase, channelName)
             dispatch({
                 manager: newManager,
                 err: undefined,
                 status: "Loading",
-                channel: undefined,
             })
             // equivalent of newManager.addListener(dispatch), but that would be hard to read!
             newManager.addListener((update) => {

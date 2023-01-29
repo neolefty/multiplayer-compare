@@ -95,6 +95,12 @@ export default function Avatar({
             </div>
             {loading && <p>Uploading ...</p>}
             {error && <p>{error}</p>}
+            {loading && (
+                <>
+                    <p>This is a longer element</p>
+                    <p>With multiple p's</p>
+                </>
+            )}
         </>
     )
 }

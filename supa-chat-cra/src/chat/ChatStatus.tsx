@@ -3,7 +3,7 @@ import styles from "./ChatStatus.module.scss"
 import { useChat } from "./ChatProvider"
 
 export const ChatStatus = () => {
-    const { status, channel, err, manager } = useChat()
+    const { status, err, manager } = useChat()
     const [loading, setLoading] = useState(false)
 
     const handleSubscribe = useCallback(
@@ -26,10 +26,10 @@ export const ChatStatus = () => {
         <>
             <form onSubmit={handleSubscribe}>
                 Status: {status || <em>Unknown</em>}
-                <button aria-live="polite" disabled={loading || !!channel}>
+                <button aria-live="polite" disabled={loading || manager.isSubscribed}>
                     Subscribe
                 </button>
-                <button aria-live="polite" onClick={handleUnsubscribe} disabled={loading || !channel}>
+                <button aria-live="polite" onClick={handleUnsubscribe} disabled={loading || !manager.isSubscribed}>
                     Unsubscribe
                 </button>
             </form>

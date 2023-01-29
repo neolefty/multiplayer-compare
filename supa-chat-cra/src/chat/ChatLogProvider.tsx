@@ -18,14 +18,14 @@ export default function ChatLogProvider({ children }: PropsWithChildren) {
     const [chatLog, chatLogDispatch] = useReducer(ChatLogReducer, INITIAL_CHAT_LOG)
     const { manager } = useChat()
 
-    // Subscribe to chat, each time its connection is renewed.
+    // Subscribe to chat, but only need to do so once per channel — even if a subscription is renewed
     useEffect(() => {
-        manager.addListener(({ channel, err, status }) => {
-            channel?.on("broadcast", { event: CHAT_EVENT }, (payload) => {
+        manager.addListener(({ manager, err, status }) => {
+            manager.channel.on("broadcast", { event: CHAT_EVENT }, (payload) => {
                 chatLogDispatch(payload.payload)
             })
         })
-    })
+    }, [manager])
 
     return <ChatLogContext.Provider value={chatLog}>{children}</ChatLogContext.Provider>
 }
