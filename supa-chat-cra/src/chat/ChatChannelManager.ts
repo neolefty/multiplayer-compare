@@ -27,13 +27,10 @@ export default class ChatChannelManager {
         return this.subscriptionStatus
     }
 
-    addListener(listener: ChatChannelManagerListener): ChatChannelManagerListener {
+    /** Listen for status updates; returns a function to stop listening. */
+    addListener(listener: ChatChannelManagerListener): () => void {
         this.listeners.add(listener)
-        return listener
-    }
-
-    removeListener(listener: ChatChannelManagerListener): boolean {
-        return this.listeners.delete(listener)
+        return () => this.listeners.delete(listener)
     }
 
     /** Turn on listening to this Supabase realtime channel. */
