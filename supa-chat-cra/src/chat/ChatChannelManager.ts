@@ -70,22 +70,23 @@ export default class ChatChannelManager {
             try {
                 const result = await this.channel.unsubscribe(timeout)
                 if (result === "error") {
-                    this.subscriptionStatus = REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR
-                    this.subscriptionError = result
+                    // this.subscriptionStatus = REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR
+                    // this.subscriptionError = result
                     console.error(result)
                     return { err: result }
                 } else {
-                    this.subscriptionStatus = REALTIME_SUBSCRIBE_STATES.SUBSCRIBED
-                    this.subscriptionError = undefined
+                    // this.subscriptionStatus = REALTIME_SUBSCRIBE_STATES.SUBSCRIBED
+                    // this.subscriptionError = undefined
                     return {}
                 }
             } catch (err) {
                 console.error(err)
-                this.subscriptionStatus = REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR
-                this.subscriptionError = `${err}`
+                // this.subscriptionStatus = REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR
+                // this.subscriptionError = `${err}`
                 return { err: this.err }
             } finally {
-                this.sendToListeners()
+                // don't need to send because it's handled by the listening in subscribe()
+                // this.sendToListeners()
             }
         }
         return {}
@@ -110,6 +111,7 @@ export default class ChatChannelManager {
             status: this.subscriptionStatus,
             err: this.subscriptionError,
         })
+        // console.warn("Sending to listeners", { event })
         this.listeners.forEach((listener) => listener(event))
         return event
     }
