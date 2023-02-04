@@ -9,7 +9,7 @@ interface ChatChannelEvent {
 type ChatChannelManagerListener = (event: ChatChannelEvent) => void
 
 // For more options & details, see https://supabase.com/docs/guides/realtime/quickstart
-export default class ChatChannelManager {
+export class ChatChannelManager {
     readonly channel: RealtimeChannel
     private listeners: Set<ChatChannelManagerListener> = new Set()
     private subscriptionError: string | undefined

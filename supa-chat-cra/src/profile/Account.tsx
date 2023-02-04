@@ -1,9 +1,9 @@
 import { Session } from "@supabase/supabase-js"
 import { SyntheticEvent, useCallback, useEffect, useReducer } from "react"
 import { JsonValue } from "type-fest"
-import Avatar from "./Avatar"
+import { Avatar } from "./Avatar"
 import { useSupabase } from "../SupabaseProvider"
-import Tree from "../util/Tree"
+import { Tree } from "../util/Tree"
 
 interface AccountState {
     loading: boolean
@@ -24,7 +24,7 @@ const DEFAULT_ACCOUNT_STATE: AccountState = {
 const reducer = (state: AccountState, action: "clear" | Partial<AccountState>) =>
     action === "clear" ? DEFAULT_ACCOUNT_STATE : { ...state, ...action }
 
-export default function Account({ session }: { session: Session }) {
+export const Account = ({ session }: { session: Session }) => {
     const [state, dispatch] = useReducer(reducer, DEFAULT_ACCOUNT_STATE)
     const { supabase } = useSupabase()
 

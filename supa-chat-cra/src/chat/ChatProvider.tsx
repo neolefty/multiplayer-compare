@@ -1,15 +1,15 @@
-import SupabaseChatManager from "./ChatChannelManager"
+import { ChatChannelManager } from "./ChatChannelManager"
 import { INITIAL_SUPABASE_STATE, useSupabase } from "../SupabaseProvider"
 import { createContext, PropsWithChildren, Reducer, useContext, useEffect, useReducer } from "react"
 
 interface ChatState {
-    manager: SupabaseChatManager
+    manager: ChatChannelManager
     status: string
     err?: string
 }
 
 const INITIAL_STATE: ChatState = {
-    manager: new SupabaseChatManager(INITIAL_SUPABASE_STATE.supabase, "uninitialized"),
+    manager: new ChatChannelManager(INITIAL_SUPABASE_STATE.supabase, "uninitialized"),
     status: "uninitialized",
 }
 
@@ -34,7 +34,7 @@ export const ChatProvider = ({ channelName, children }: PropsWithChildren<{ chan
     useEffect(() => {
         if (state.manager.channelName !== channelName) {
             if (!state.manager.isClosed) state.manager.unsubscribe()
-            const newManager = new SupabaseChatManager(supabase, channelName)
+            const newManager = new ChatChannelManager(supabase, channelName)
             dispatch({
                 manager: newManager,
                 err: undefined,

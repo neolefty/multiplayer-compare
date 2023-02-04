@@ -14,7 +14,7 @@ export const ChatLogReducer = (state: ChatLogState, action: string): ChatLogStat
     })
 export const useChatLog = () => useContext(ChatLogContext)
 
-export default function ChatLogProvider({ children }: PropsWithChildren) {
+export const ChatLogProvider = ({ children }: PropsWithChildren) => {
     const [chatLog, chatLogDispatch] = useReducer(ChatLogReducer, INITIAL_CHAT_LOG)
     const { manager } = useChat()
 

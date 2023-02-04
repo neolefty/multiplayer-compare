@@ -1,11 +1,11 @@
 import React from "react"
-import ChatLog from "./ChatLog"
-import ChatSend from "./ChatSend"
+import { ChatLog } from "./ChatLog"
+import { ChatSend } from "./ChatSend"
 import { PageFrame } from "../nav/PageFrame"
 import { ChatStatus } from "./ChatStatus"
 import { useChat } from "./ChatProvider"
 
-export default function ChatPage() {
+export const ChatPage = () => {
     const { manager } = useChat()
     // TODO reconnect chat log on channel renew
     // TODO maybe move chat log to SupabaseChatChannel!

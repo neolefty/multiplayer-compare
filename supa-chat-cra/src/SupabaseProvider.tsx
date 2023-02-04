@@ -1,8 +1,8 @@
 import { Session } from "@supabase/gotrue-js/src/lib/types"
 import { createClient, SupabaseClient } from "@supabase/supabase-js"
 import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo } from "react"
-import useDeepState from "./useDeepState"
-import ChatChannelManager from "./chat/ChatChannelManager"
+import { useDeepState } from "./useDeepState"
+import { ChatChannelManager } from "./chat/ChatChannelManager"
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || "missing from config"
 const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || "missing from config"
@@ -26,7 +26,7 @@ export const INITIAL_SUPABASE_STATE: SupabaseState = Object.freeze({
 
 const SupabaseContext = createContext<SupabaseState>(INITIAL_SUPABASE_STATE)
 
-export default function SupabaseProvider({ children }: PropsWithChildren) {
+export const SupabaseProvider = ({ children }: PropsWithChildren) => {
     const [session, setSession] = useDeepState<Session | null>(null)
 
     // subscribe to auth
