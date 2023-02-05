@@ -1,10 +1,10 @@
-import { ChatChannelManager } from "./ChatChannelManager"
+import { ChatChannelManager, ChatChannelState } from "./ChatChannelManager"
 import { INITIAL_SUPABASE_STATE, useSupabase } from "../SupabaseProvider"
-import { createContext, PropsWithChildren, Reducer, useContext, useEffect, useReducer } from "react"
+import { createContext, PropsWithChildren, Reducer, useContext, useEffect, useReducer, useRef } from "react"
 
 interface ChatState {
     manager: ChatChannelManager
-    status: string
+    status: ChatChannelState
     err?: string
 }
 
@@ -31,22 +31,29 @@ export const ChatProvider = ({ channelName, children }: PropsWithChildren<{ chan
     // Should we also wait for useSupabase.session? May need Auth.
     const { supabase } = useSupabase()
 
+    const cleanupRef = useRef<() => void | undefined>()
+
     useEffect(() => {
-        if (state.manager.channelName !== channelName) {
+        // renew channelManager when:
+        //  – channelName changes — also unsubscribe from old channel & manager
+        //  – channel is closed — need to make a new channel object to re-subscribe
+        if (state.manager.channelName !== channelName || state.status === "CLOSED") {
             if (!state.manager.isClosed) state.manager.unsubscribe()
             const newManager = new ChatChannelManager(supabase, channelName)
+            cleanupRef.current?.()
+            cleanupRef.current = undefined
             dispatch({
+                // further updates will come from listener below
                 manager: newManager,
                 err: undefined,
-                status: "Loading",
+                status: "uninitialized",
             })
-            // equivalent of newManager.addListener(dispatch), but that would be hard to read!
-            newManager.addListener((update) => {
-                console.warn({ channelName }, update)
+            cleanupRef.current = newManager.addListener((update) => {
+                console.debug({ channelName }, update)
                 dispatch(update)
             })
         }
-    }, [channelName, state.manager, supabase])
+    }, [channelName, state.manager, state.status, supabase])
 
     return <ChatContext.Provider value={state}>{children}</ChatContext.Provider>
 }

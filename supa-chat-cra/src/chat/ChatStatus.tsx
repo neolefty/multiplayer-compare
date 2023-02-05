@@ -17,7 +17,6 @@ export const ChatStatus = () => {
     const handleUnsubscribe = useCallback(
         async (e: SyntheticEvent) => {
             e.preventDefault()
-            console.log("handleUnsubscribe", { e })
             await manager.unsubscribe()
         },
         [manager]

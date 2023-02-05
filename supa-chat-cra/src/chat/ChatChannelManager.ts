@@ -2,28 +2,31 @@ import { REALTIME_SUBSCRIBE_STATES, RealtimeChannel, SupabaseClient } from "@sup
 
 interface ChatChannelEvent {
     manager: ChatChannelManager
-    status?: string
+    status: ChatChannelState
     err?: string
 }
 /** Listen for changes to a channel subscription. */
 type ChatChannelManagerListener = (event: ChatChannelEvent) => void
+
+export type ChatChannelState = "uninitialized" | REALTIME_SUBSCRIBE_STATES
 
 // For more options & details, see https://supabase.com/docs/guides/realtime/quickstart
 export class ChatChannelManager {
     readonly channel: RealtimeChannel
     private listeners: Set<ChatChannelManagerListener> = new Set()
     private subscriptionError: string | undefined
-    private subscriptionStatus: REALTIME_SUBSCRIBE_STATES | undefined
+    private subscriptionStatus: ChatChannelState
 
     constructor(readonly supabaseClient: SupabaseClient, readonly channelName: string) {
         this.channel = this.supabaseClient.channel(this.channelName)
+        this.subscriptionStatus = "uninitialized"
     }
 
     get err(): string | undefined {
         return this.subscriptionError
     }
 
-    get status(): REALTIME_SUBSCRIBE_STATES | undefined {
+    get status(): REALTIME_SUBSCRIBE_STATES | "uninitialized" {
         return this.subscriptionStatus
     }
 
