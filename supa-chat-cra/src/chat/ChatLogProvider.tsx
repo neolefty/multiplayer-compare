@@ -1,6 +1,7 @@
-import { createContext, PropsWithChildren, useContext, useEffect, useReducer } from "react"
+import { createContext, PropsWithChildren, useContext, useEffect, useReducer, useRef } from "react"
 import { CHAT_EVENT } from "./ChatLog"
 import { useChat } from "./ChatProvider"
+import { RealtimeChannel } from "@supabase/supabase-js"
 
 interface ChatLogState {
     chatLog: ReadonlyArray<string>
@@ -17,13 +18,27 @@ export const useChatLog = () => useContext(ChatLogContext)
 export const ChatLogProvider = ({ children }: PropsWithChildren) => {
     const [chatLog, chatLogDispatch] = useReducer(ChatLogReducer, INITIAL_CHAT_LOG)
     const { manager } = useChat()
+    const lastChannel = useRef<RealtimeChannel | undefined>()
 
     // Subscribe to chat, but only need to do so once per channel — even if a subscription is renewed
     useEffect(() => {
-        manager.addListener(({ manager, err, status }) => {
-            manager.channel.on("broadcast", { event: CHAT_EVENT }, (payload) => {
-                chatLogDispatch(payload.payload)
-            })
+        const curChannel = manager.channel
+        // return value is a removeListener() cleanup function
+        return manager.addListener(({ manager, err, status }) => {
+            if (curChannel !== lastChannel.current) {
+                const channel = manager.channel.on("broadcast", { event: CHAT_EVENT }, (payload) => {
+                    if (curChannel === lastChannel.current) {
+                        chatLogDispatch(payload.payload)
+                    } else {
+                        // only listen to one channel at a time; and since there's no unsub function, just discard
+                        console.debug(`Discarding message "${payload.payload}" from old channel.`)
+                    }
+                })
+                console.log(
+                    `Subscribe to new channel — is the main the same as the on() response? ${channel === curChannel}`
+                )
+                lastChannel.current = channel
+            }
         })
     }, [manager])
 

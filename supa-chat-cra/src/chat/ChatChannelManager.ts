@@ -23,7 +23,7 @@ export class ChatChannelManager {
         return this.subscriptionError
     }
 
-    get status(): string | undefined {
+    get status(): REALTIME_SUBSCRIBE_STATES | undefined {
         return this.subscriptionStatus
     }
 
