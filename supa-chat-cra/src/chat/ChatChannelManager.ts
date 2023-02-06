@@ -44,7 +44,7 @@ export class ChatChannelManager {
             try {
                 this.channel.subscribe((status, err) => {
                     if (err) console.error(err)
-                    console.log("Subscription callback", { status, err })
+                    console.debug("Subscription callback", { status, err })
                     this.subscriptionError = err && `${err}`
                     this.subscriptionStatus = status as REALTIME_SUBSCRIBE_STATES
                     const event = this.sendToListeners()

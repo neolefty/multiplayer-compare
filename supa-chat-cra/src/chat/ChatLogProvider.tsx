@@ -34,9 +34,6 @@ export const ChatLogProvider = ({ children }: PropsWithChildren) => {
                         console.debug(`Discarding message "${payload.payload}" from old channel.`)
                     }
                 })
-                console.log(
-                    `Subscribe to new channel — is the main the same as the on() response? ${channel === curChannel}`
-                )
                 lastChannel.current = channel
             }
         })
