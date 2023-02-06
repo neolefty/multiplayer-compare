@@ -26,15 +26,15 @@ export const ChatLogProvider = ({ children }: PropsWithChildren) => {
         // return value is a removeListener() cleanup function
         return manager.addListener(({ manager, err, status }) => {
             if (curChannel !== lastChannel.current) {
-                const channel = manager.channel.on("broadcast", { event: CHAT_EVENT }, (payload) => {
+                lastChannel.current = manager.channel.on("broadcast", { event: CHAT_EVENT }, (payload) => {
                     if (curChannel === lastChannel.current) {
+                        console.log("chat", { payload })
                         chatLogDispatch(payload.payload)
                     } else {
                         // only listen to one channel at a time; and since there's no unsub function, just discard
                         console.debug(`Discarding message "${payload.payload}" from old channel.`)
                     }
                 })
-                lastChannel.current = channel
             }
         })
     }, [manager])
