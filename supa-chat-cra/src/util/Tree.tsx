@@ -1,6 +1,6 @@
 import { JsonValue } from "type-fest"
 
-export default function Tree({ json }: { json: JsonValue | undefined }) {
+export const Tree = ({ json }: { json: JsonValue | undefined }) => {
     if (Array.isArray(json))
         return (
             <ul>

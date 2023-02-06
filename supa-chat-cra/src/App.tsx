@@ -1,12 +1,12 @@
 import React from "react"
 import "./App.scss"
 import { RouterProvider } from "react-router-dom"
-import router from "./nav/router"
-import SupabaseProvider from "./SupabaseProvider"
+import { router } from "./nav/router"
+import { SupabaseProvider } from "./SupabaseProvider"
 import { ChatProvider } from "./chat/ChatProvider"
-import ChatLogProvider from "./chat/ChatLogProvider"
+import { ChatLogProvider } from "./chat/ChatLogProvider"
 
-export default function App() {
+export const App = () => {
     return (
         <SupabaseProvider>
             <ChatProvider channelName="chat">

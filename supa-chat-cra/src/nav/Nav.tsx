@@ -10,7 +10,7 @@ const StyledLink = ({ children, to }: PropsWithChildren<{ to: string }>) => (
     </NavLink>
 )
 
-export default function Nav() {
+export const Nav = () => {
     const { session } = useSupabase()
     return (
         <div className={styles.container}>

@@ -1,10 +1,10 @@
 import React from "react"
 import { createBrowserRouter } from "react-router-dom"
-import ChatPage from "../chat/ChatPage"
+import { ChatPage } from "../chat/ChatPage"
 import { PageFrame } from "./PageFrame"
-import ProfilePage from "../profile/ProfilePage"
+import { ProfilePage } from "../profile/ProfilePage"
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
     {
         path: "/",
         element: (
@@ -22,5 +22,3 @@ const router = createBrowserRouter([
         element: <ChatPage />,
     },
 ])
-
-export default router

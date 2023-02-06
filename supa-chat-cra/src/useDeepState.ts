@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react"
 
-export default function useDeepState<S>(initialState: S): [s: S, setter: (s: S) => boolean] {
+export const useDeepState = <S>(initialState: S): [s: S, setter: (s: S) => boolean] => {
     const [state, setState] = useState(initialState)
     const jsonRef = useRef<string>()
     const setDeepState = useCallback((newState: S) => {

@@ -1,10 +1,10 @@
 import React from "react"
-import Account from "./Account"
-import AuthPanel from "./AuthPanel"
+import { Account } from "./Account"
+import { AuthPanel } from "./AuthPanel"
 import { PageFrame } from "../nav/PageFrame"
 import { useSupabase } from "../SupabaseProvider"
 
-export default function ProfilePage() {
+export const ProfilePage = () => {
     const { session } = useSupabase()
     return (
         <PageFrame>
