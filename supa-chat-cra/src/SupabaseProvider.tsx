@@ -37,7 +37,7 @@ export const SupabaseProvider = ({ children }: PropsWithChildren) => {
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log("AuthStateChange", { event, session })
+            console.debug("AuthStateChange", { event, session })
             setSession(session)
         })
         return subscription.unsubscribe

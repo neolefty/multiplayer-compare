@@ -16,7 +16,7 @@ export const AuthPanel = () => {
         try {
             setLoading(true)
             const { error, data } = await supabase.auth.signInWithOtp({ email })
-            console.log({ data })
+            console.debug("Login attempt result", { data })
             if (error) throw error
             setSent(true)
         } catch (err: any) {
