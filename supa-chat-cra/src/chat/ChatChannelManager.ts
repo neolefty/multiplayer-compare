@@ -1,8 +1,4 @@
-import {
-    REALTIME_SUBSCRIBE_STATES,
-    RealtimeChannel,
-    SupabaseClient,
-} from "@supabase/supabase-js"
+import { REALTIME_SUBSCRIBE_STATES, RealtimeChannel, SupabaseClient } from "@supabase/supabase-js"
 
 interface ChatChannelEvent {
     manager: ChatChannelManager
@@ -43,9 +39,7 @@ export class ChatChannelManager {
     /** Turn on listening to this Supabase realtime channel. */
     async subscribe(timeout?: number): Promise<{ err?: string; status?: string }> {
         if (this.isSubscribed)
-            throw new Error(
-                "Already subscribed; unsubscribe before re-subscribing. See also renew()."
-            )
+            throw new Error("Already subscribed; unsubscribe before re-subscribing. See also renew().")
         return new Promise<ChatChannelEvent>((resolve) => {
             try {
                 this.channel.subscribe((status, err) => {

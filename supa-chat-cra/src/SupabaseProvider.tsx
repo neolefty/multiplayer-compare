@@ -1,12 +1,6 @@
 import { Session } from "@supabase/gotrue-js/src/lib/types"
 import { createClient, SupabaseClient } from "@supabase/supabase-js"
-import React, {
-    createContext,
-    PropsWithChildren,
-    useContext,
-    useEffect,
-    useMemo,
-} from "react"
+import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo } from "react"
 import { useDeepState } from "./useDeepState"
 import { ChatChannelManager } from "./chat/ChatChannelManager"
 
@@ -38,9 +32,7 @@ export const SupabaseProvider = ({ children }: PropsWithChildren) => {
     // subscribe to auth
     useEffect(() => {
         // store initial session
-        supabase.auth
-            .getSession()
-            .then(({ data: { session: newSession } }) => setSession(newSession))
+        supabase.auth.getSession().then(({ data: { session: newSession } }) => setSession(newSession))
         // listen for changes
         const {
             data: { subscription },
@@ -59,11 +51,7 @@ export const SupabaseProvider = ({ children }: PropsWithChildren) => {
             }),
         [session]
     )
-    return (
-        <SupabaseContext.Provider value={supabaseState}>
-            {children}
-        </SupabaseContext.Provider>
-    )
+    return <SupabaseContext.Provider value={supabaseState}>{children}</SupabaseContext.Provider>
 }
 
 export const useSupabase = () => useContext(SupabaseContext)

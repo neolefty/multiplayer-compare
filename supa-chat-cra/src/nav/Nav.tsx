@@ -5,12 +5,7 @@ import { useSupabase } from "../SupabaseProvider"
 import styles from "./Nav.module.scss"
 
 const StyledLink = ({ children, to }: PropsWithChildren<{ to: string }>) => (
-    <NavLink
-        to={to}
-        className={({ isActive, isPending }) =>
-            clsx(styles.navItem, isActive && styles.active)
-        }
-    >
+    <NavLink to={to} className={({ isActive, isPending }) => clsx(styles.navItem, isActive && styles.active)}>
         {children}
     </NavLink>
 )
