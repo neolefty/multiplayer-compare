@@ -58,7 +58,7 @@
         "double"
       ],
       "max-len": ["warn", {
-        "code": 90
+        "code": 120
       }]
     }
   },

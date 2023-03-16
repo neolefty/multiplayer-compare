@@ -1,12 +1,4 @@
-import {
-    createContext,
-    Dispatch,
-    PropsWithChildren,
-    useContext,
-    useEffect,
-    useMemo,
-    useReducer,
-} from "react"
+import { createContext, Dispatch, PropsWithChildren, useContext, useEffect, useMemo, useReducer } from "react"
 import { z } from "zod"
 import { useSupabase } from "../SupabaseProvider"
 import { RealtimeChannel } from "@supabase/supabase-js"
@@ -26,6 +18,7 @@ type PresenceContents = z.infer<typeof PresenceContentsValidator>
 //     presence_ref: "F0zE8faUh49c51UG",
 // }]
 // Top level keys are UUIDs that I think identify the originator of that presence state
+// TODO genericize — can we somehow define PresenceEventValidator<PresenceContents>?
 const PresenceEventValidator = z.record(
     // How many objects are in the array?
     z.array(
@@ -39,17 +32,19 @@ type PresenceEvent = z.infer<typeof PresenceEventValidator>
 
 interface PresenceState<V extends {}> {
     channel?: RealtimeChannel
-    value: V
+    localValue: V
+    remoteValues: PresenceEvent
     dispatch: Dispatch<Partial<V>>
     status?: string
 }
 
 const INITIAL_STATE: PresenceState<PresenceContents> = {
-    value: {
+    localValue: {
         count: 0,
         description: "",
         active: false,
     },
+    remoteValues: {},
     dispatch: () => {
         throw new Error("Not initialized")
     },
@@ -64,26 +59,21 @@ const PresenceReducer = (
     return Object.freeze({ ...state, ...action })
 }
 
-export const PresenceProvider = ({
-    channelName,
-    children,
-}: PropsWithChildren<{ channelName: string }>) => {
+export const PresenceProvider = ({ channelName, children }: PropsWithChildren<{ channelName: string }>) => {
     const [state, dispatch] = useReducer(PresenceReducer, INITIAL_STATE)
     const { supabase, session } = useSupabase()
-    const { channel, value } = state
+    const { channel, localValue } = state
     const stateWithDispatch: PresenceState<PresenceContents> = useMemo(
         () => ({
             ...state,
             dispatch: (action) => {
-                const newValue = Object.freeze({ ...value, ...action })
-                channel
-                    ?.track(newValue)
-                    .then((response) => console.log("track", { response }))
+                const newValue = Object.freeze({ ...localValue, ...action })
+                channel?.track(newValue).then((response) => console.log("track", { response }))
                 console.log("dispatch", { oldValue: channel?.presenceState(), newValue })
-                dispatch({ value: newValue })
+                dispatch({ localValue: newValue })
             },
         }),
-        [channel, state, value]
+        [channel, state, localValue]
     )
 
     // keep a channel around
@@ -97,19 +87,13 @@ export const PresenceProvider = ({
         if (channel) {
             const subscribedChannel = channel
                 .on("presence", { event: "sync" }, () => {
-                    const rawValue = channel.presenceState()
-                    console.log("sync", { rawValue })
-                    const value = PresenceEventValidator.parse(rawValue)
-                    // TODO consider dispatching the original result of
-                    //  channel.presencesState(), for stability — since the
-                    //  result of Zod's parse() is a deep clone
-                    // dispatch({ value })
+                    const rawEvent = channel.presenceState()
+                    console.log("sync", { rawValue: rawEvent })
+                    const remoteValues: PresenceEvent = PresenceEventValidator.parse(rawEvent)
+                    dispatch({ remoteValues })
                 })
-                .on(
-                    "presence",
-                    { event: "join" },
-                    ({ key, currentPresences, newPresences }) =>
-                        console.log("join", { key, currentPresences, newPresences })
+                .on("presence", { event: "join" }, ({ key, currentPresences, newPresences }) =>
+                    console.log("join", { key, currentPresences, newPresences })
                 )
                 .on("presence", { event: "leave" }, () => {
                     console.log("leave", channel.presenceState())
@@ -124,19 +108,12 @@ export const PresenceProvider = ({
             // cleanup: unsub
             return () => {
                 console.log("Unsubscribing")
-                subscribedChannel
-                    .unsubscribe()
-                    .then((response: string) => console.log("Unsubscribed", { response }))
+                subscribedChannel.unsubscribe().then((response: string) => console.log("Unsubscribed", { response }))
             }
         }
     }, [channel])
 
-    return (
-        <PresenceContext.Provider value={stateWithDispatch}>
-            {children}
-        </PresenceContext.Provider>
-    )
+    return <PresenceContext.Provider value={stateWithDispatch}>{children}</PresenceContext.Provider>
 }
 
-export const usePresence = (): PresenceState<PresenceContents> =>
-    useContext(PresenceContext)
+export const usePresence = (): PresenceState<PresenceContents> => useContext(PresenceContext)
