@@ -5,7 +5,12 @@ import { useSupabase } from "../SupabaseProvider"
 import styles from "./Nav.module.scss"
 
 const StyledLink = ({ children, to }: PropsWithChildren<{ to: string }>) => (
-    <NavLink to={to} className={({ isActive, isPending }) => clsx(styles.navItem, isActive && styles.active)}>
+    <NavLink
+        to={to}
+        className={({ isActive, isPending }) =>
+            clsx(styles.navItem, isActive && styles.active)
+        }
+    >
         {children}
     </NavLink>
 )
@@ -18,6 +23,7 @@ export const Nav = () => {
             <StyledLink to="/">Home</StyledLink>
             <StyledLink to="/profile">Profile</StyledLink>
             <StyledLink to="/chat">Chat</StyledLink>
+            <StyledLink to="/sync">Sync</StyledLink>
         </div>
     )
 }

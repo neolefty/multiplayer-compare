@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom"
 import { ChatPage } from "../chat/ChatPage"
 import { PageFrame } from "./PageFrame"
 import { ProfilePage } from "../profile/ProfilePage"
+import { PresencePage } from "../presence/PresencePage"
 
 export const router = createBrowserRouter([
     {
@@ -20,5 +21,9 @@ export const router = createBrowserRouter([
     {
         path: "chat",
         element: <ChatPage />,
+    },
+    {
+        path: "sync",
+        element: <PresencePage />,
     },
 ])

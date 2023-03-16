@@ -23,7 +23,8 @@
     "react-scripts": "5.0.1",
     "sass": "^1.57.1",
     "typescript": "^4.9.4",
-    "web-vitals": "^3.1.1"
+    "web-vitals": "^3.1.1",
+    "zod": "^3.20.6"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -55,7 +56,10 @@
       "quotes": [
         "warn",
         "double"
-      ]
+      ],
+      "max-len": ["warn", {
+        "code": 90
+      }]
     }
   },
   "browserslist": {

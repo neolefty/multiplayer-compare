@@ -5,14 +5,17 @@ import { router } from "./nav/router"
 import { SupabaseProvider } from "./SupabaseProvider"
 import { ChatProvider } from "./chat/ChatProvider"
 import { ChatLogProvider } from "./chat/ChatLogProvider"
+import { PresenceProvider } from "./presence/PresenceProvider"
 
 export const App = () => {
     return (
         <SupabaseProvider>
             <ChatProvider channelName="chat">
-                <ChatLogProvider>
-                    <RouterProvider router={router} />
-                </ChatLogProvider>
+                <PresenceProvider channelName="presence-page">
+                    <ChatLogProvider>
+                        <RouterProvider router={router} />
+                    </ChatLogProvider>
+                </PresenceProvider>
             </ChatProvider>
         </SupabaseProvider>
     )
