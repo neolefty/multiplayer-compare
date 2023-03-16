@@ -19,14 +19,15 @@ type PresenceContents = z.infer<typeof PresenceContentsValidator>
 // }]
 // Top level keys are UUIDs that I think identify the originator of that presence state
 // TODO genericize — can we somehow define PresenceEventValidator<PresenceContents>?
+
+// a single element in a presence update
+const PresenceEventContentsValidator = PresenceContentsValidator.merge(z.object({ presence_ref: z.string() }))
+export type PresenceEventContents = z.infer<typeof PresenceEventContentsValidator>
+
+// the whole presence update
 const PresenceEventValidator = z.record(
     // How many objects are in the array?
-    z.array(
-        PresenceContentsValidator.merge(
-            // the actual value
-            z.object({ presence_ref: z.string() })
-        )
-    )
+    z.array(PresenceEventContentsValidator)
 )
 type PresenceEvent = z.infer<typeof PresenceEventValidator>
 
