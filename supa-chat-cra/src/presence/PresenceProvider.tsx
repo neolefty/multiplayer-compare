@@ -37,6 +37,7 @@ interface PresenceState<V extends {}> {
     remoteValues: PresenceEvent
     dispatch: Dispatch<Partial<V>>
     status?: string
+    onUnsubscribe?: () => Promise<string>
 }
 
 const INITIAL_STATE: PresenceState<PresenceContents> = {
@@ -73,11 +74,20 @@ export const PresenceProvider = ({ channelName, children }: PropsWithChildren<{ 
                 console.log("dispatch", { oldValue: channel?.presenceState(), newValue })
                 dispatch({ localValue: newValue })
             },
+            onUnsubscribe:
+                channel &&
+                (async () => {
+                    // TODO dedupe with useEffect cleanup function below
+                    const response = await channel.unsubscribe()
+                    console.log("Unsubscribed", { response })
+                    dispatch({ channel: undefined })
+                    return response
+                }),
         }),
         [channel, state, localValue]
     )
 
-    // keep a channel around
+    // Create a channel and keep it around
     useEffect(() => {
         if (!channel && session) dispatch({ channel: supabase.channel(channelName) })
         // TODO cleanup — may need a ref for channel

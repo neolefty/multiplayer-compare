@@ -1,5 +1,5 @@
 import { PageFrame } from "../nav/PageFrame"
-import React from "react"
+import React, { useCallback, useState } from "react"
 import { PresenceEventContents, usePresence } from "./PresenceProvider"
 import "./PresencePage.scss"
 
@@ -52,12 +52,12 @@ const PresenceStateDisplay = ({ uuid, value }: { uuid: string; value: ReadonlyAr
 // TODO look up users by UUID and improve the labels
 
 export const PresencePage = () => {
-    const { status, remoteValues } = usePresence()
+    const { status, remoteValues, onUnsubscribe } = usePresence()
     const remoteEntries = Object.entries(remoteValues)
     return (
         <PageFrame>
             <p>
-                Status: <em>{status || "Unknown"}</em>
+                Status: <em>{status || "Unknown"}</em> <PresenceUnsubscribeButton />
             </p>
             <hr />
             <h3>Local State</h3>
@@ -65,7 +65,7 @@ export const PresencePage = () => {
             {remoteEntries.length && (
                 <>
                     <hr />
-                    <h3>Remote State</h3>
+                    <h3>Remote States</h3>
                     <dl>
                         {remoteEntries.map(([uuid, value]) => (
                             <PresenceStateDisplay uuid={uuid} value={value} key={uuid} />
@@ -74,5 +74,26 @@ export const PresencePage = () => {
                 </>
             )}
         </PageFrame>
+    )
+}
+
+// Note that this button only un-subscribes; PresenceProvider will automatically re-subscribe.
+const PresenceUnsubscribeButton = () => {
+    const { onUnsubscribe } = usePresence()
+    const [loading, setLoading] = useState(false)
+    const handleClick = useCallback(async () => {
+        if (onUnsubscribe && !loading) {
+            try {
+                setLoading(true)
+                await onUnsubscribe()
+            } finally {
+                setLoading(false)
+            }
+        }
+    }, [loading, onUnsubscribe])
+    return (
+        <button disabled={!onUnsubscribe || loading} onClick={onUnsubscribe}>
+            Resubscrib{loading ? "ing" : "e"}
+        </button>
     )
 }
