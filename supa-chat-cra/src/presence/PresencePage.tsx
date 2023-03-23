@@ -52,7 +52,7 @@ const PresenceStateDisplay = ({ uuid, value }: { uuid: string; value: ReadonlyAr
 // TODO look up users by UUID and improve the labels
 
 export const PresencePage = () => {
-    const { status, remoteValues, onUnsubscribe } = usePresence()
+    const { status, remoteValues } = usePresence()
     const remoteEntries = Object.entries(remoteValues)
     return (
         <PageFrame>
@@ -92,8 +92,8 @@ const PresenceUnsubscribeButton = () => {
         }
     }, [loading, onUnsubscribe])
     return (
-        <button disabled={!onUnsubscribe || loading} onClick={onUnsubscribe}>
-            Resubscrib{loading ? "ing" : "e"}
+        <button disabled={!onUnsubscribe || loading} onClick={handleClick}>
+            Resubscribe
         </button>
     )
 }

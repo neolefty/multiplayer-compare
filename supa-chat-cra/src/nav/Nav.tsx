@@ -15,10 +15,10 @@ export const Nav = () => {
     return (
         <div className={styles.container}>
             <span className={styles.navItem}>Hello {session?.user.email}</span>
-            <StyledLink to="/">Home</StyledLink>
             <StyledLink to="/profile">Profile</StyledLink>
             <StyledLink to="/chat">Chat</StyledLink>
             <StyledLink to="/sync">Sync</StyledLink>
+            <StyledLink to="/delta_pg">𝝳pg</StyledLink>
         </div>
     )
 }

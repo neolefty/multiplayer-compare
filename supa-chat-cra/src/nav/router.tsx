@@ -4,6 +4,7 @@ import { ChatPage } from "../chat/ChatPage"
 import { PageFrame } from "./PageFrame"
 import { ProfilePage } from "../profile/ProfilePage"
 import { PresencePage } from "../presence/PresencePage"
+import { DeltaPgPage } from "../deltaPg/DeltaPgPage"
 
 export const router = createBrowserRouter([
     {
@@ -25,5 +26,9 @@ export const router = createBrowserRouter([
     {
         path: "sync",
         element: <PresencePage />,
+    },
+    {
+        path: "delta_pg",
+        element: <DeltaPgPage />,
     },
 ])
