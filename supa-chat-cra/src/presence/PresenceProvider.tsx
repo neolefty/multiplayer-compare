@@ -54,6 +54,15 @@ const INITIAL_STATE: PresenceState<PresenceContents> = {
 
 const PresenceContext = createContext<PresenceState<PresenceContents>>(INITIAL_STATE)
 
+// How many messages per month needed for a game?
+// See: https://supabase.com/pricing
+// Free plan Postgres: 2 million per month
+// Pro ($25): 5 million per month, $2.50 for incremental per million
+// Games: 1000 turns x 5 players x 2 ways = 10k messages per game
+// 2 million messages = 200 games
+// $2.50 more per million = 100 games. Additional games 2.5 cents each
+// Compare to GCP, $0.40 per million invocations.
+
 const PresenceReducer = (
     state: PresenceState<PresenceContents>,
     action: Partial<PresenceState<PresenceContents>>
@@ -61,6 +70,8 @@ const PresenceReducer = (
     return Object.freeze({ ...state, ...action })
 }
 
+// Note rate limits: https://supabase.com/docs/guides/realtime/rate-limits#presence-limits
+// 10 keys per object, 10% of realtime message rate limit
 export const PresenceProvider = ({ channelName, children }: PropsWithChildren<{ channelName: string }>) => {
     const [state, dispatch] = useReducer(PresenceReducer, INITIAL_STATE)
     const { supabase, session } = useSupabase()
